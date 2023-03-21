@@ -1,18 +1,22 @@
 import React, {useState} from "react";
-import {FormField, InputPassword} from "@metro-ui/core";
+import {FormField, Heading, InputPassword, Layout, Modal, ModalContent, Strong} from "@metro-ui/core";
 import {Input} from "@metro-ui/core";
 import {Text} from "@metro-ui/core";
 import {Button} from '@metro-ui/core';
+import register from "../api/register";
+import axios from "axios";
 
 function RegisterForm() {
 
     const [name, setName] = useState("");
-    const [user, setUser] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const [forgotToEnterName, setForgotToEnterName] = useState(false);
     const [forgotToEnterUser, setForgotToEnterUser] = useState(false);
     const [forgotToEnterPassword, setForgotToEnterPassword] = useState(false);
+
+    const [showModal, setShowModal] = useState(false);
 
 
     function handleNameChange(e: any) {
@@ -23,7 +27,7 @@ function RegisterForm() {
 
     function handleUserChange(e: any) {
         // console.log(e.target.value);
-        setUser(e.target.value);
+        setEmail(e.target.value);
     }
 
     function handlePasswordChange(e: any) {
@@ -31,11 +35,34 @@ function RegisterForm() {
         setPassword(e.target.value);
     }
 
+    function handleSignup(e: any) {
+        if (name === "") setForgotToEnterName(true);
+        else setForgotToEnterName(false);
+        if (email === "") setForgotToEnterUser(true);
+        else setForgotToEnterUser(false);
+        if (password === "") setForgotToEnterPassword(true);
+        else setForgotToEnterPassword(false);
+
+        if (name !== "" && email !== "" && password !== "") {
+            register(name, email, password);
+            // const searchUser = async (name:any, email:any, password:any) => {
+            //     return axios.get(`/users?name=${name}&email=${email}&password=${password}`)
+            //         .then(response => console.log(response.data))
+            //         .catch(error => console.log(error));
+            // };
+
+            //register(name, email, password);
+
+
+            setShowModal(true);
+        }
+    }
+
 
     return (
         <>
             <FormField
-                htmlFor="username"
+                htmlFor="name"
                 label={<b>Name</b>}
             >
                 <Input
@@ -59,17 +86,17 @@ function RegisterForm() {
             </FormField>
 
             <FormField
-                htmlFor="username"
-                label={<b>Username or email</b>}
+                htmlFor="email"
+                label={<b>Email</b>}
             >
                 <Input
                     iconLabel="Search"
-                    id="username"
-                    name="username"
+                    id="email"
+                    name="email"
                     onChange={handleUserChange}
-                    placeholder="Enter your username or email"
+                    placeholder="Enter your email"
                     type="text"
-                    value={user}
+                    value={email}
                 />
                 {forgotToEnterUser &&
                     <Text
@@ -77,7 +104,7 @@ function RegisterForm() {
                         element="span"
                         size="small"
                     >
-                        Please enter your Username or email
+                        Please enter your Email
                     </Text>
                 }
             </FormField>
@@ -111,18 +138,39 @@ function RegisterForm() {
                 }}
                 isWaitingCallback={function noRefCheck() {
                 }}
-                onClick={() => {
-                    console.log(name, user, password);
-                    if (name === "") setForgotToEnterName(true);
-                    else setForgotToEnterName(false);
-                    if (user === "") setForgotToEnterUser(true);
-                    else setForgotToEnterUser(false);
-                    if (password === "") setForgotToEnterPassword(true);
-                    else setForgotToEnterPassword(false);
-                }}
+                onClick={handleSignup}
             >
                 Sing up
             </Button>
+
+            <Modal
+                aria-labelledby="modal-title"
+                isOpen={showModal}
+            >
+                <ModalContent
+                    direction="column"
+                    padding="xx-large"
+                    spacing="medium"
+                >
+                    <Heading
+                        align="center"
+                        hasNoNativeMargin
+                        id="modal-title"
+                    >
+                        Your account has been created
+                    </Heading>
+                    <Layout
+                        grow={0}
+                        justify="center"
+                    >
+                        <Button variant="secondary" onClick={() => {
+                            setShowModal(false)
+                        }}>
+                            Great!
+                        </Button>
+                    </Layout>
+                </ModalContent>
+            </Modal>
         </>
     );
 }

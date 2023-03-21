@@ -4,10 +4,10 @@ import WelcomeScreen from "./components/WelcomeScreen";
 import TodoScreen from "./components/TodoScreen";
 
 function App() {
-  return (
-    //<WelcomeScreen/>
-      <TodoScreen/>
-  );
+    return (
+        <WelcomeScreen/>
+        //<TodoScreen/>
+    );
 }
 
 export default App;

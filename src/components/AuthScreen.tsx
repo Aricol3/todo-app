@@ -4,7 +4,7 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import register from "../api/register";
 
-function WelcomeScreen() {
+function AuthScreen() {
     return (
         <>
             <Card elevation="xx-large">
@@ -31,4 +31,4 @@ function WelcomeScreen() {
     );
 }
 
-export default WelcomeScreen;
+export default AuthScreen;

@@ -2,7 +2,12 @@ import React, {useState} from "react";
 import {FormField, InputPassword} from "@metro-ui/core";
 import {Input} from "@metro-ui/core";
 import {Text} from "@metro-ui/core";
-import {Button} from '@metro-ui/core';
+import {Button} from "@metro-ui/core";
+import login from "../api/login"
+import {useSelector, useDispatch} from 'react-redux'
+import {setJWT} from "../redux/authSlice";
+import {useNavigate} from "react-router-dom";
+
 
 function LoginForm() {
 
@@ -12,6 +17,9 @@ function LoginForm() {
     const [forgotToEnterUser, setForgotToEnterUser] = useState(false);
     const [forgotToEnterPassword, setForgotToEnterPassword] = useState(false);
 
+
+    //const JWT = useSelector((state:any) => state.auth.JWT);
+    const dispatch = useDispatch();
 
     function handleUserChange(e: any) {
         // console.log(e.target.value);
@@ -23,20 +31,33 @@ function LoginForm() {
         setPassword(e.target.value);
     }
 
+    const navigate = useNavigate();
+    async function handleLogin(e: any) {
+        if (user === "") setForgotToEnterUser(true);
+        else setForgotToEnterUser(false);
+        if (password === "") setForgotToEnterPassword(true);
+        else setForgotToEnterPassword(false);
+
+        let JWTString = await login(user, password);
+        if (JWTString) {
+            dispatch(setJWT(JWTString));
+            navigate("/todos");
+        }
+
+    }
 
     return (
         <>
             <FormField
-                htmlFor="username"
-                label={<b>Username or email</b>}
-                link="Forgot Username?"
+                htmlFor="email"
+                label={<b>Email</b>}
             >
                 <Input
                     iconLabel="Search"
-                    id="username"
-                    name="username"
+                    id="email"
+                    name="email"
                     onChange={handleUserChange}
-                    placeholder="Enter your username or email"
+                    placeholder="Enter your Email"
                     type="text"
                     value={user}
                 />
@@ -46,7 +67,7 @@ function LoginForm() {
                         element="span"
                         size="small"
                     >
-                        Please enter your Username or email
+                        Please enter your Email
                     </Text>
                 }
             </FormField>
@@ -77,17 +98,7 @@ function LoginForm() {
             </FormField>
 
             <Button
-                isBeforeValidationCallback={function noRefCheck() {
-                }}
-                isWaitingCallback={function noRefCheck() {
-                }}
-                onClick={() => {
-                    console.log(user, password);
-                    if (user === "") setForgotToEnterUser(true);
-                    else setForgotToEnterUser(false);
-                    if (password === "") setForgotToEnterPassword(true);
-                    else setForgotToEnterPassword(false);
-                }}
+                onClick={handleLogin}
             >
                 Login
             </Button>

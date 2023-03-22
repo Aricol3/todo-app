@@ -23,10 +23,6 @@ const register = (name: any, email: any, password: any) => {
         .catch(error => {
             console.error(error);
         });
-
-
-    //console.log(axios.get(apiUrl + 'name/Merge?', config));
-
 }
 
 export default register;

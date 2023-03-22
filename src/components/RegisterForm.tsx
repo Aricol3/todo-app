@@ -4,7 +4,6 @@ import {Input} from "@metro-ui/core";
 import {Text} from "@metro-ui/core";
 import {Button} from '@metro-ui/core';
 import register from "../api/register";
-import axios from "axios";
 
 function RegisterForm() {
 
@@ -45,15 +44,6 @@ function RegisterForm() {
 
         if (name !== "" && email !== "" && password !== "") {
             register(name, email, password);
-            // const searchUser = async (name:any, email:any, password:any) => {
-            //     return axios.get(`/users?name=${name}&email=${email}&password=${password}`)
-            //         .then(response => console.log(response.data))
-            //         .catch(error => console.log(error));
-            // };
-
-            //register(name, email, password);
-
-
             setShowModal(true);
         }
     }
@@ -134,10 +124,6 @@ function RegisterForm() {
             </FormField>
 
             <Button
-                isBeforeValidationCallback={function noRefCheck() {
-                }}
-                isWaitingCallback={function noRefCheck() {
-                }}
                 onClick={handleSignup}
             >
                 Sing up

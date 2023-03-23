@@ -3,7 +3,8 @@ import {FormField, InputPassword} from "@metro-ui/core";
 import {Input} from "@metro-ui/core";
 import {Text} from "@metro-ui/core";
 import {Button} from "@metro-ui/core";
-import login from "../api/login"
+//import login from "../api/login"
+import {login} from "../api/auth"
 import {useSelector, useDispatch} from 'react-redux'
 import {setJWT} from "../redux/authSlice";
 import {useNavigate} from "react-router-dom";
@@ -41,6 +42,7 @@ function LoginForm() {
         let JWTString = await login(user, password);
         if (JWTString) {
             dispatch(setJWT(JWTString));
+            localStorage.setItem("user", JWTString);
             navigate("/todos");
         }
 

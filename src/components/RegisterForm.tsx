@@ -1,9 +1,10 @@
 import React, {useState} from "react";
-import {FormField, Heading, InputPassword, Layout, Modal, ModalContent, Strong} from "@metro-ui/core";
+import {FormField, Heading, InputPassword, Layout, Modal, ModalContent} from "@metro-ui/core";
 import {Input} from "@metro-ui/core";
 import {Text} from "@metro-ui/core";
 import {Button} from '@metro-ui/core';
-import register from "../api/register";
+//import register from "../api/register";
+import {register} from "../api/auth";
 
 function RegisterForm() {
 
@@ -15,7 +16,7 @@ function RegisterForm() {
     const [forgotToEnterUser, setForgotToEnterUser] = useState(false);
     const [forgotToEnterPassword, setForgotToEnterPassword] = useState(false);
 
-    const [showModal, setShowModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
 
     function handleNameChange(e: any) {
@@ -34,7 +35,7 @@ function RegisterForm() {
         setPassword(e.target.value);
     }
 
-    function handleSignup(e: any) {
+    async function handleSignup(e: any) {
         if (name === "") setForgotToEnterName(true);
         else setForgotToEnterName(false);
         if (email === "") setForgotToEnterUser(true);
@@ -43,8 +44,14 @@ function RegisterForm() {
         else setForgotToEnterPassword(false);
 
         if (name !== "" && email !== "" && password !== "") {
-            register(name, email, password);
-            setShowModal(true);
+            const resp = await register(name, email, password);
+            if (resp) {
+                setShowSuccessModal(true);
+            }
+            else {
+                //setErrorModal
+            }
+
         }
     }
 
@@ -131,7 +138,7 @@ function RegisterForm() {
 
             <Modal
                 aria-labelledby="modal-title"
-                isOpen={showModal}
+                isOpen={showSuccessModal}
             >
                 <ModalContent
                     direction="column"
@@ -150,7 +157,7 @@ function RegisterForm() {
                         justify="center"
                     >
                         <Button variant="secondary" onClick={() => {
-                            setShowModal(false)
+                            setShowSuccessModal(false)
                         }}>
                             Great!
                         </Button>

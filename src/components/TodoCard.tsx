@@ -1,20 +1,49 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {TextField, Checkbox, FormControlLabel} from "@mui/material";
 import styles from "./TodoCard.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import {ButtonGroup, Button} from "@mui/material";
 import {v4 as uuidv4} from "uuid";
+import {useSelector} from "react-redux";
+import {getTodos, addTodo, deleteTodo, complementTodo} from "../api/todo";
 
 function TodoCard() {
+    const JWT = useSelector((state: any) => state.auth.JWT);
 
-    const [todos, setTodos]: any = useState([]);
+    // ??????????????????????????????????????????????????????????? De ce output-ul e dublu
+    // const [todos, setTodos]: any = useState([]);
+    // useEffect(() => {
+    //     const getTodosFromDB = async () => {
+    //         const resp = await getTodos(JWT);
+    //         resp.forEach((todo:any)=> {
+    //             setTodos((todos: any) => [...todos, {"name": todo.title, "id": todo.id, "checked": todo.completed}]);
+    //         })
+    //     }
+    //     getTodosFromDB().then(r => null);
+    // },[]);
+    // ??????????????????????????????????????????????????????????? Dar asa e bine
+    const [todos, setTodos] = useState<any[]>([]);
+    useEffect(() => {
+        const getTodosFromDB = async () => {
+            const resp = await getTodos(JWT);
+            const todos = resp.reverse().map((todo: any) => ({
+                name: todo.title,
+                id: todo.id,
+                checked: todo.completed
+            }));
+            setTodos(todos);
+        };
+        getTodosFromDB().then(r => null);
+    }, []);
 
-    function handleDelete(id: string) {
+    function handleDelete(id: any) {
+        deleteTodo(JWT, id);
         const newArray = todos.filter((todo: any) => todo.id !== id);
         setTodos(newArray);
     }
 
-    const handleCheckboxChange = (id: string) => {
+    const handleCheckboxChange = (id: any) => {
+        complementTodo(JWT, id);
         todos.forEach((todo: any) => {
             if (todo.id === id) {
                 todo.checked = !todo.checked;
@@ -22,9 +51,10 @@ function TodoCard() {
         })
     };
 
-    function keyPress(e: any) {
+    async function keyPress(e: any) {
         if (e.keyCode === 13) {
-            setTodos((todos: any) => [...todos, {"name": e.target.value, "id": uuidv4(), "checked": false}]);
+            const res: any = await addTodo(JWT, e.target.value);
+            setTodos((todos: any) => [...todos, {"name": e.target.value, "id": res.id, "checked": false}]);
             e.target.value = "";
         }
     }
@@ -50,14 +80,17 @@ function TodoCard() {
                 <TextField style={{margin: '10px'}} id="add-task" label="Add new task" variant="standard"
                            onKeyDown={keyPress}/>
 
-                {todos.filter((todo:any)=> filters.status === 'all' || (filters.status === 'completed' ? todo.checked : !todo.checked)).map((todo: any) => {
+                {todos.filter((todo: any) => filters.status === 'all' || (filters.status === 'completed' ? todo.checked : !todo.checked)).map((todo: any) => {
                     return (
-                        <span style={{display: "flex", alignItems: "center"}} key={todo.id}>        <FormControlLabel
+                        <span style={{display: "flex", alignItems: "center"}} key={todo.id}>
+                            <FormControlLabel
                             style={{wordWrap: "break-word"}}
                             control={<Checkbox defaultChecked={todo.checked}
-                                               onChange={() => handleCheckboxChange(todo.id)}/>} label={todo.name}/>
+                                               onChange={() => handleCheckboxChange(todo.id)}/>}
+                            label={todo.name}
+                            />
                             <CloseIcon
-                            onClick={() => handleDelete(todo.id)}/>
+                                onClick={() => handleDelete(todo.id)}/>
                         </span>)
                 })
                 }
@@ -67,11 +100,11 @@ function TodoCard() {
                     aria-label="outlined primary button group"
                 >
                     <Button onClick={handleShowAll}
-                            variant={filters.status == "all" ? "contained" : "outlined"}>All</Button>
+                            variant={filters.status === "all" ? "contained" : "outlined"}>All</Button>
                     <Button onClick={handleShowCompleted}
-                            variant={filters.status == "completed" ? "contained" : "outlined"}>Completed</Button>
+                            variant={filters.status === "completed" ? "contained" : "outlined"}>Completed</Button>
                     <Button onClick={handleShowIncomplete}
-                            variant={filters.status == "incomplete" ? "contained" : "outlined"}>Incomplete</Button>
+                            variant={filters.status === "incomplete" ? "contained" : "outlined"}>Incomplete</Button>
                 </ButtonGroup>
 
             </div>

@@ -2,7 +2,6 @@ import React from "react";
 import {Layout, TabGroup, Tabs, Tab, TabPanels, TabPanel, Card, Link} from '@metro-ui/core';
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
-import register from "../api/register";
 
 function AuthScreen() {
     return (

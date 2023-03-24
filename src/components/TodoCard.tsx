@@ -3,47 +3,35 @@ import {TextField, Checkbox, FormControlLabel} from "@mui/material";
 import styles from "./TodoCard.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import {ButtonGroup, Button} from "@mui/material";
-import {v4 as uuidv4} from "uuid";
 import {useSelector} from "react-redux";
 import {getTodos, addTodo, deleteTodo, complementTodo} from "../api/todo";
 
 function TodoCard() {
     const JWT = useSelector((state: any) => state.auth.JWT);
-
-    // ??????????????????????????????????????????????????????????? De ce output-ul e dublu
-    // const [todos, setTodos]: any = useState([]);
-    // useEffect(() => {
-    //     const getTodosFromDB = async () => {
-    //         const resp = await getTodos(JWT);
-    //         resp.forEach((todo:any)=> {
-    //             setTodos((todos: any) => [...todos, {"name": todo.title, "id": todo.id, "checked": todo.completed}]);
-    //         })
-    //     }
-    //     getTodosFromDB().then(r => null);
-    // },[]);
-    // ??????????????????????????????????????????????????????????? Dar asa e bine
     const [todos, setTodos] = useState<any[]>([]);
+
+    const getTodosFromDB = async () => {
+        const resp = await getTodos(JWT);
+        const todos = resp.reverse().map((todo: any) => ({
+            name: todo.title,
+            id: todo.id,
+            checked: todo.completed
+        }));
+        setTodos(todos);
+    };
+
     useEffect(() => {
-        const getTodosFromDB = async () => {
-            const resp = await getTodos(JWT);
-            const todos = resp.reverse().map((todo: any) => ({
-                name: todo.title,
-                id: todo.id,
-                checked: todo.completed
-            }));
-            setTodos(todos);
-        };
-        getTodosFromDB().then(r => null);
+        void getTodosFromDB();
     }, []);
 
     function handleDelete(id: any) {
-        deleteTodo(JWT, id);
+        void deleteTodo(JWT, id);
         const newArray = todos.filter((todo: any) => todo.id !== id);
         setTodos(newArray);
     }
 
     const handleCheckboxChange = (id: any) => {
-        complementTodo(JWT, id);
+        void complementTodo(JWT, id);
         todos.forEach((todo: any) => {
             if (todo.id === id) {
                 todo.checked = !todo.checked;
@@ -53,9 +41,11 @@ function TodoCard() {
 
     async function keyPress(e: any) {
         if (e.keyCode === 13) {
-            const res: any = await addTodo(JWT, e.target.value);
-            setTodos((todos: any) => [...todos, {"name": e.target.value, "id": res.id, "checked": false}]);
-            e.target.value = "";
+            if(e.target.value!="") {
+                const res: any = await addTodo(JWT, e.target.value);
+                setTodos((todos: any) => [...todos, {"name": e.target.value, "id": res.id, "checked": false}]);
+                e.target.value = "";
+            }
         }
     }
 

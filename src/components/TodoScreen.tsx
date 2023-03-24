@@ -15,10 +15,10 @@ function TodoScreen() {
         dispatch(setJWT(JWTString));
     }
 
-    async function handleLogout() {
+    function handleLogout() {
         localStorage.setItem("user", "");
         navigate("/");
-        await window.location.reload();
+        window.location.reload();
     }
 
     const navigate = useNavigate();

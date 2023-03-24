@@ -1,7 +1,7 @@
 {
   "name": "todo-app",
   "version": "0.1.0",
-  "homepage": "https://aricol3.github.io/todo-app",
+  "homepage": "http://localhost:3000/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.6",

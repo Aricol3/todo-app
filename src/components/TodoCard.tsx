@@ -76,8 +76,8 @@ function TodoCard() {
     return (
         <>
             <div className={styles.todoCard}>
-                <TextField style={{marginBottom: '10px'}} id="change-title" label="Change Title" variant="standard"/>
-                <TextField style={{margin: '10px'}} id="add-task" label="Add new task" variant="standard"
+                <h2>Todos</h2>
+                <TextField style={{marginBottom: '10px'}} id="add-task" label="Add new task" variant="standard"
                            onKeyDown={keyPress}/>
 
                 {todos.filter((todo: any) => filters.status === 'all' || (filters.status === 'completed' ? todo.checked : !todo.checked)).map((todo: any) => {

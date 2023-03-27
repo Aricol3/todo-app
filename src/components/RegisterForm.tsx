@@ -3,7 +3,6 @@ import {FormField, Heading, InputPassword, Layout, Modal, ModalContent} from "@m
 import {Input} from "@metro-ui/core";
 import {Text} from "@metro-ui/core";
 import {Button} from '@metro-ui/core';
-//import register from "../api/register";
 import {register} from "../api/auth";
 
 function RegisterForm() {
@@ -35,7 +34,7 @@ function RegisterForm() {
         setPassword(e.target.value);
     }
 
-    async function handleSignup(e: any) {
+    async function handleSignup() {
         if (name === "") setForgotToEnterName(true);
         else setForgotToEnterName(false);
         if (email === "") setForgotToEnterUser(true);

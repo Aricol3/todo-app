@@ -3,9 +3,8 @@ import {FormField, InputPassword} from "@metro-ui/core";
 import {Input} from "@metro-ui/core";
 import {Text} from "@metro-ui/core";
 import {Button} from "@metro-ui/core";
-//import login from "../api/login"
 import {login} from "../api/auth"
-import {useSelector, useDispatch} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {setJWT} from "../redux/authSlice";
 import {useNavigate} from "react-router-dom";
 
@@ -19,21 +18,18 @@ function LoginForm() {
     const [forgotToEnterPassword, setForgotToEnterPassword] = useState(false);
 
 
-    //const JWT = useSelector((state:any) => state.auth.JWT);
     const dispatch = useDispatch();
 
     function handleUserChange(e: any) {
-        // console.log(e.target.value);
         setUser(e.target.value);
     }
 
     function handlePasswordChange(e: any) {
-        // console.log(e.target.value);
         setPassword(e.target.value);
     }
 
     const navigate = useNavigate();
-    async function handleLogin(e: any) {
+    async function handleLogin() {
         if (user === "") setForgotToEnterUser(true);
         else setForgotToEnterUser(false);
         if (password === "") setForgotToEnterPassword(true);

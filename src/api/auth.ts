@@ -45,7 +45,6 @@ const register = async (name: any, email: any, password: any) => {
         return resp.data.message;
     } catch
         (error: any) {
-        return null;
         console.error(error.toString());
     }
 }

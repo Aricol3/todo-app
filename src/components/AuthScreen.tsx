@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout, TabGroup, Tabs, Tab, TabPanels, TabPanel, Card, Link} from '@metro-ui/core';
+import {Layout, TabGroup, Tabs, Tab, TabPanels, TabPanel, Card} from '@metro-ui/core';
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
